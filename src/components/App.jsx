@@ -38,8 +38,8 @@ export const App = () => {
   };
 
   const loadMore = data => {
-    setPage(prevPage => (page = prevPage + data));
     setIsLoading((isLoading = true));
+    setPage(prev => (page = prev + data));
   };
 
   const submitButton = quote => {
@@ -61,7 +61,11 @@ export const App = () => {
     );
   };
 
-  useEffect(() => fetchImages());
+  useEffect(() => {
+    if (isLoading) {
+      fetchImages();
+    } // eslint-disable-next-line
+  }, [isLoading]);
 
   return (
     <>
@@ -76,9 +80,7 @@ export const App = () => {
       )}
       {total > 12 && page <= maxPage ? (
         <Button onClick={data => loadMore(data)} />
-      ) : (
-        "That's all"
-      )}
+      ) : null}
       {modal && (
         <Modal source={largeURL} alt={altText} closeModal={closeModal} />
       )}
